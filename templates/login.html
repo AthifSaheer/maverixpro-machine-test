@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %} Login {% endblock title %}
+
+{% block content %}
+
+    <br>
+    <div class="container" id="container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <form method="POST">
+                    {% csrf_token %}
+                    <h4 class="text-center">Signin </h4>
+                    <small class="text-danger">{{ error }}</small>
+
+                    <div class="form-group mt-2">
+                        <label for="username">Username</label>
+                        <input type="text" name="username" class="form-control" id="username" placeholder="Username" required>
+                        <small class="text-danger" id="uname-required">Username required</small>
+                    </div>
+                    
+                    <div class="form-group mt-2">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
+                        <small class="text-danger" id="pword-required">Password required</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-outline-info w-100 mt-3" onclick="loginBtn()">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        var loginUnameRequiredx = document.getElementById("uname-required")
+        var loginPasswordRequiredx = document.getElementById("pword-required")
+            
+        loginUnameRequiredx.style.display = 'none';
+        loginPasswordRequiredx.style.display = 'none';
+        
+        function loginBtn() {
+            var loginUsernameInput = document.getElementById('username').value;
+            var loginUnameRequired = document.getElementById("uname-required")
+            var loginPasswordInput = document.getElementById('password').value;
+            var loginPasswordRequired = document.getElementById("pword-required")
+                
+            if (loginUsernameInput == "") {
+                loginUnameRequired.style.display = 'block'
+            } else {
+                loginUnameRequired.style.display = 'none';
+            }
+            
+            if (loginPasswordInput == "") {
+                loginPasswordRequired.style.display = 'block'
+            }else {
+                loginPasswordRequired.style.display = 'none'
+            }
+
+            if (prevent == 1) {
+                e.preventDefault()
+            }
+        }
+    </script>
+
+{% endblock %}
