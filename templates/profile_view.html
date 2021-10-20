@@ -14,12 +14,30 @@
                 </div>
                 <div class="col-md-6 mt-3">
                     <div class="card-body">
-                        <h5 class="title">Athif saheer</h5>
+                        <h5 class="title">{{ user.username }}</h5>
                         <div class="d-flex row">
                             <p class="col-md-5"><small class="text-muted">10 followers</small></p>
                             <p class="col-md-7"><small class="text-muted">10 followers</small></p>
                         </div>
-                        <button type="button" class="btn btn-info btn-sm">Follow</button>
+
+                        {% if request.user.username == user.username %}
+                            <button type="button" class="btn btn-info btn-sm" id="uploadimage" onclick="clickImgBtn()">Upload image</button>
+                            <button type="button" class="btn btn-success btn-sm" id="uploadvideo" onclick="clickVidBtn()">Upload video</button>
+
+                            <form action="" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+
+                                <p hidden>{{ form.image.label }}</p>
+                                {{ form.image }}
+                                <button hidden id="upldFrmBtn">Submit</button>
+                            </form>
+                            
+                            <!-- <input type="file" name="video" hidden id="uploadvidinput" accept="video/*"> -->
+
+                        {% else %}
+                            <a href="{% url 'follow' user.id %}"><button type="button" class="btn btn-info btn-sm">Follow</button></a>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>
@@ -29,10 +47,13 @@
 
         <div class="row bg-prmary d-flex" style="flex-wrap: wrap;">
             <div class="col-md-2"></div>
-            <div class="col-md-3 mt-2">
-                <img style="width:270px; height:270px;" src="https://images.unsplash.com/photo-1618614944895-fc409a83ad80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=580&q=80" alt="photo">
-            </div>
-            <div class="col-md-3 mt-2">
+
+            {% for img in images %}
+                <div class="col-md-3 mt-2">
+                    <img style="width:270px; height:270px;" src="/media/{{img.image }}" alt="photo">
+                </div>
+            {% endfor %}
+            <!-- <div class="col-md-3 mt-2">
                 <img style="width:270px; height:270px;" src="https://images.unsplash.com/photo-1618614944895-fc409a83ad80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=580&q=80" alt="photo">
             </div>
             <div class="col-md-3 mt-2">
@@ -42,9 +63,38 @@
 
             <div class="col-md-3 mt-2">
                 <img style="width:270px; height:270px;" src="https://images.unsplash.com/photo-1618614944895-fc409a83ad80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=580&q=80" alt="photo">
-            </div>
+            </div> -->
         </div>
 
     </div>
+
+    <script>
+        var upldImgFrmBtn = document.getElementById("upldFrmBtn")
+        // var upldVidBtn = document.getElementById("uploadvideo")
+        
+        // var upldImgInpt = document.getElementsByTagName('label')[0].style.display = 'none';
+        var upldImgInpt = document.getElementById("id_image")
+        upldImgInpt.style.display = "none"
+
+        // var upldUserInpt = document.getElementById("id_user")
+        // upldUserInpt.style.display = "none"
+        // upldUserInpt.options[0].text;
+
+        var upldVidInpt = document.getElementById("uploadvidinput")
+
+        function clickImgBtn() {
+            upldImgInpt.click()
+        }
+        function clickVidBtn() {
+            upldVidInpt.click()
+        }
+        upldImgInpt.addEventListener('change',function(e) {
+            e.preventDefault()
+            console.log("---onchange workng")
+            upldImgFrmBtn.click()
+            upldImgInpt.value = ""
+        })
+
+    </script>
 
 {% endblock %}
