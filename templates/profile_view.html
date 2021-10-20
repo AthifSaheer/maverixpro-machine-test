@@ -5,7 +5,7 @@
 
     <div class="container mt-2 shadow-sm p-3 mb-5 bg-white rounded" style="display: flex; background-color: rgb(255, 255, 255); flex-wrap: wrap;">
         
-        <div class="m-2" style="min-width: 100%;">
+        <div class="m-2" style="min-width: 100%; border: none; border-bottom: 2px solid #e0e0e0;">
             <div class="row g-0">
                 <div class="col-md-2"></div>
                 <div class="col-md-3">
@@ -16,8 +16,7 @@
                     <div class="card-body">
                         <h5 class="title">{{ user.username }}</h5>
                         <div class="d-flex row">
-                            <p class="col-md-5"><small class="text-muted">10 followers</small></p>
-                            <p class="col-md-7"><small class="text-muted">10 followers</small></p>
+                            <p class="col-md-5"><small class="text-muted">{{follow_count}} followers</small></p>
                         </div>
 
                         {% if request.user.username == user.username %}
@@ -49,33 +48,40 @@
             </div>
         </div>
 
-        <hr>
 
-        <div class="row bg-prmary d-flex" style="flex-wrap: wrap;">
+        <div class="row bg-prmary d-flex">
             <div class="col-md-2"></div>
 
             {% if request.user.username == user.username %}
             
-                {% for img in images %}
-                    <div class="col-md-3 mt-2">
-                        <img style="width:270px; height:270px;" src="/media/{{img.image }}" alt="photo">
+                <div class="col-md-10">
+                    <div class="row" style="flex-wrap: wrap;">
+                        {% for img in images %}
+                            <div class="col-md-4 mt-2">
+                                <img style="width:270px; height:270px;" src="/media/{{img.image }}" alt="photo">
+                            </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
+                </div>
 
             {% else %}
 
                 {% if follow.status == "accepted" %}
-                    {% for img in images %}
-                        <div class="col-md-3 mt-2">
-                            <img style="width:270px; height:270px;" src="/media/{{img.image }}" alt="photo">
+                    <div class="col-md-10">
+                        <div class="row" style="flex-wrap: wrap;">
+                            {% for img in images %}
+                                <div class="col-md-4 mt-2">
+                                    <img style="width:270px; height:270px;" src="/media/{{img.image }}" alt="photo">
+                                </div>
+                            {% endfor %}
                         </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="col-md-12 mt-2">
-                        <p>First you follow</p>
                     </div>
+                {% else %}
+                    <p class="text-secondary" style="padding-left: 250px;">If you want to see {{user.username}}'s post then you follow him.</p>
+                <!-- <div class="col-d-10">
+                </div> -->
                 {% endif %}
-                
+
             {% endif %}
         </div>
 

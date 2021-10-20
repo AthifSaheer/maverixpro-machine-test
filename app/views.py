@@ -2,22 +2,25 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
 from .models import *
 from .forms import *
 
 def home(request):
     try:
-        user = User.objects.all()
+        user = User.objects.filter(is_staff=False)
         follow = Follow.objects.filter(given_user=request.user, status="requested")
-        print("-----follow--", follow)
+        follow_count = Follow.objects.filter(given_user=request.user, status="accepted").count()
+
         context = {
             'users': user,
             'followers': follow,
+            'follow_count': follow_count,
         }
     except:
-        print("this is workng------------------")
-        context = {}
+        context = {
+            'users': user,
+            'follow_count': 0,
+        }
     return render(request, 'home.html', context)
 
     
@@ -28,20 +31,16 @@ def login(request):
 
     if request.method == 'POST':
         username = request.POST.get('username')
-        password = request.POST.get('password')
-        # hashed_pwrod = make_password(password, "")
+        password = request.POST['password']
+        
         try:
             usr = User.objects.get(username=username)
-            # if hashed_pwrod == usr.password:
-            #     print("pwrd success----", usr.password)
-            # else:
-            #     print("pwrd error----", usr.password)
-            #     print("pwrd error----", hashed_pwrod)
             auth_login(request, usr)
             return redirect('home')
         except User.DoesNotExist:
             error = 'Invalid creditials ! !'
             return render(request, 'login.html', {'error':error})
+
 
 def register(request):
     if request.method == 'GET':
@@ -74,17 +73,20 @@ def profile_view(request, id):
         user = User.objects.get(id=id)
         images = UploadImage.objects.filter(user=id)
         form = UploadImageForm()
-        
+
         try:
-            follow = Follow.objects.get(given_user=id)
+            follow = Follow.objects.get(requested_user=request.user, given_user=id)
+            follow_count = Follow.objects.filter(given_user=request.user, status="accepted").count()
         except Follow.DoesNotExist:
             follow = None
+            follow_count = 0
 
         context = {
             'user': user,
             'images': images,
             'form': form,
             'follow': follow,
+            'follow_count': follow_count,
         }
 
     if request.method == 'POST':

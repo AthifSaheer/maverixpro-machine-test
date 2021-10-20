@@ -12,7 +12,13 @@
                     {% csrf_token%}
 
                     <h4 class="text-center">Signup </h4>
-                    <small class="text-danger">{{ pword_error }}</small>
+                    <!-- <small class="text-danger">{{ pword_error }}</small> -->
+
+                    {% if field.errors %} {% for error in field.errors %}
+                        <p style="font-size: 13px;">
+                            {{ error|escape }}
+                        </p>
+                    {% endfor %} {% endif %}
 
                     <div class="form-group mt-2">
                         <label for="username">Username</label>
@@ -40,6 +46,7 @@
 
                     <button type="submit" class="btn btn-outline-info w-100 mt-3" onclick="signupBtn()">Submit</button>
                 </form>
+                <a href="{% url 'login' %}" >I've an account!</a>
             </div>
         </div>
     </div>

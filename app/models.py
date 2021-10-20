@@ -33,8 +33,6 @@ class Follow(models.Model):
     requested_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="requested_user")
     given_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="given_user")
     status = models.CharField(max_length=40, choices=status, default="requested")
-    # accepted = models.BooleanField(default=False)
-    # rejected = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
