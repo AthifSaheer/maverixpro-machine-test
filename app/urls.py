@@ -8,6 +8,9 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
 
     path('profile/view/<int:id>/', views.profile_view, name='profile_view'),
+    
     path('follow/<int:id>/', views.follow, name='follow'),
+    path('unfollow/<int:id>/', views.unfollow, name='unfollow'),
     path('accept/follow/request/<int:id>/', views.accept_follow_request, name='accept_follow_request'),
+    path('reject/follow/request/<int:id>/', views.reject_follow_request, name='reject_follow_request'),
 ]

@@ -7,13 +7,17 @@ from .models import *
 from .forms import *
 
 def home(request):
-    user = User.objects.all()
-    follow = Follow.objects.filter(following_user=request.user, accepted=False, rejected=False)
-    print("follow--", follow)
-    context = {
-        'users': user,
-        'followers': follow,
-    }
+    try:
+        user = User.objects.all()
+        follow = Follow.objects.filter(given_user=request.user, status="requested")
+        print("-----follow--", follow)
+        context = {
+            'users': user,
+            'followers': follow,
+        }
+    except:
+        print("this is workng------------------")
+        context = {}
     return render(request, 'home.html', context)
 
     
@@ -70,23 +74,25 @@ def profile_view(request, id):
         user = User.objects.get(id=id)
         images = UploadImage.objects.filter(user=id)
         form = UploadImageForm()
+        
+        try:
+            follow = Follow.objects.get(given_user=id)
+        except Follow.DoesNotExist:
+            follow = None
 
         context = {
             'user': user,
             'images': images,
             'form': form,
+            'follow': follow,
         }
 
     if request.method == 'POST':
         
         form = UploadImageForm(request.POST, request.FILES)
-        print("-------------------------form--------", form)
         if form.is_valid():
-            print("-------------------------valid--------")
             form.save()
-            # return redirect('profile_view', id)
-            
-        # image = request.POST.get('image')
+
         upld_img = UploadImage.objects.all().order_by('-id').first()
         upld_img.user = request.user
         upld_img.save()
@@ -105,14 +111,33 @@ def profile_view(request, id):
     
 
 def follow(request, id):
-    follow = Follow()
-    follow.which_user = request.user
-    follow.following_user = User.objects.get(id=id)
-    follow.save()
+    if Follow.objects.filter(requested_user=request.user, given_user=id):
+        follow = Follow.objects.get(requested_user=request.user, given_user=id)
+        follow.status = "requested"
+        follow.save()
+    else:
+        follow = Follow()
+        follow.requested_user = request.user
+        follow.given_user = User.objects.get(id=id)
+        follow.status = "requested"
+        follow.save()
+    return redirect('profile_view', id)
+
+def unfollow(request, id):
+    if Follow.objects.filter(requested_user=request.user, given_user=id):
+        follow = Follow.objects.get(requested_user=request.user, given_user=id)
+        follow.status = "rejected"
+        follow.save()
     return redirect('profile_view', id)
 
 def accept_follow_request(request, id):
-    follow = Follow.objects.filter(which_user=id)
-    follow.accepted = True
+    follow = Follow.objects.get(requested_user=id, given_user=request.user)
+    follow.status = "accepted"
+    follow.save()
+    return redirect('home')
+
+def reject_follow_request(request, id):
+    follow = Follow.objects.get(requested_user=id, given_user=request.user)
+    follow.status = "rejected"
     follow.save()
     return redirect('home')

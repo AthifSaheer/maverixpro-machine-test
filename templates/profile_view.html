@@ -35,7 +35,13 @@
                             <!-- <input type="file" name="video" hidden id="uploadvidinput" accept="video/*"> -->
 
                         {% else %}
-                            <a href="{% url 'follow' user.id %}"><button type="button" class="btn btn-info btn-sm">Follow</button></a>
+                            {% if follow.status == "requested" %}
+                                <a href="{% url 'follow' user.id %}"><button type="button" class="btn btn-info btn-sm">Requested</button></a>
+                            {% elif follow.status == "accepted" %}
+                                <a href="{% url 'unfollow' user.id %}"><button type="button" class="btn btn-info btn-sm">Unfollow</button></a>
+                            {% else %}
+                                <a href="{% url 'follow' user.id %}"><button type="button" class="btn btn-info btn-sm">Follow</button></a>
+                            {% endif %}
                         {% endif %}
 
                     </div>
@@ -48,22 +54,29 @@
         <div class="row bg-prmary d-flex" style="flex-wrap: wrap;">
             <div class="col-md-2"></div>
 
-            {% for img in images %}
-                <div class="col-md-3 mt-2">
-                    <img style="width:270px; height:270px;" src="/media/{{img.image }}" alt="photo">
-                </div>
-            {% endfor %}
-            <!-- <div class="col-md-3 mt-2">
-                <img style="width:270px; height:270px;" src="https://images.unsplash.com/photo-1618614944895-fc409a83ad80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=580&q=80" alt="photo">
-            </div>
-            <div class="col-md-3 mt-2">
-                <img style="width:270px; height:270px;" src="https://images.unsplash.com/photo-1618614944895-fc409a83ad80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=580&q=80" alt="photo">
-            </div>
-            <div class="col-md-2"></div>
+            {% if request.user.username == user.username %}
+            
+                {% for img in images %}
+                    <div class="col-md-3 mt-2">
+                        <img style="width:270px; height:270px;" src="/media/{{img.image }}" alt="photo">
+                    </div>
+                {% endfor %}
 
-            <div class="col-md-3 mt-2">
-                <img style="width:270px; height:270px;" src="https://images.unsplash.com/photo-1618614944895-fc409a83ad80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=580&q=80" alt="photo">
-            </div> -->
+            {% else %}
+
+                {% if follow.status == "accepted" %}
+                    {% for img in images %}
+                        <div class="col-md-3 mt-2">
+                            <img style="width:270px; height:270px;" src="/media/{{img.image }}" alt="photo">
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-md-12 mt-2">
+                        <p>First you follow</p>
+                    </div>
+                {% endif %}
+                
+            {% endif %}
         </div>
 
     </div>

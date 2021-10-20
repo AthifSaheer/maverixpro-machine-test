@@ -57,11 +57,9 @@
                     <img src="https://media.istockphoto.com/photos/learn-to-love-yourself-first-picture-id1291208214?k=20&m=1291208214&s=612x612&w=0&h=WbHbwklzP81iAWV0dPlQWuBLxnbqJFk81a9OZG6qvSM=" alt=""
                     style="border-radius: 50%; width: 50px; height: 50px">
                     <div>
-                        <p style="margin-left: 23px; margin-bottom: 0;">{{ follw.which_user }}</p>
-                        <!-- <p class="m">Admin</p> -->
-                        <span class="badge bg-info mx-3">Accept</span>
-                        <span class="badge bg-danger mx-1">Reject</span>
-                        <!-- <button class="btn btn-primary">a</button> -->
+                        <p style="margin-left: 23px; margin-bottom: 0;">{{ follw.requested_user }}</p>
+                        <a href="{% url 'accept_follow_request' follw.requested_user.id %}"><span class="badge bg-info mx-3">Accept</span></a>
+                        <a href="{% url 'reject_follow_request' follw.requested_user.id %}"><span class="badge bg-danger mx-1">Reject</span></a>
                     </div>
                 </div>
             {% endfor %}

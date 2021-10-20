@@ -23,12 +23,19 @@ class UploadVideo(models.Model):
     def __str__(self):
         return "User: " + str(self.user) + " | Video: " + str(self.video)
 
+status = [
+    ('requested', "requested"),
+    ('accepted', "accepted"),
+    ('rejected', "rejected"),
+]
+
 class Follow(models.Model):
-    which_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="which_user")
-    following_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following_user")
-    accepted = models.BooleanField(default=False)
-    rejected = models.BooleanField(default=False)
+    requested_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="requested_user")
+    given_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="given_user")
+    status = models.CharField(max_length=40, choices=status, default="requested")
+    # accepted = models.BooleanField(default=False)
+    # rejected = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.following_user) + " connected to: " + str(self.which_user)
+        return "Requested user: " + str(self.requested_user) + " | Give user: " + str(self.given_user)
