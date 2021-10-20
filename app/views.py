@@ -9,6 +9,7 @@ def home(request):
     try:
         user = User.objects.filter(is_staff=False)
         follow = Follow.objects.filter(given_user=request.user, status="requested")
+        # follow = Follow.objects.filter(given_user=request.user, status="requested")
         follow_count = Follow.objects.filter(given_user=request.user, status="accepted").count()
 
         context = {

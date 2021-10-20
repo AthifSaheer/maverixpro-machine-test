@@ -3,29 +3,6 @@
 
 {% block content %}
 
-    <!-- <div class="container mt-2" style="display: flex; background-color: rgb(255, 255, 255); flex-wrap: wrap;">
-            
-        {% for usr in users %}
-            <a href="{% url 'profile_view' usr.id %}">
-                <div class="card m-2" style="width: 150px; height: 150px;">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <img src="https://media.istockphoto.com/photos/learn-to-love-yourself-first-picture-id1291208214?k=20&m=1291208214&s=612x612&w=0&h=WbHbwklzP81iAWV0dPlQWuBLxnbqJFk81a9OZG6qvSM=" class="img-fluid m-1" alt="use image"
-                            style="border-radius: 50%; width: 50px; height: 50px">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                            <h5 class="card-title">{{ usr.username }}</h5>
-                            <p class="card-text"><small class="text-muted">10 followers</small></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        {% endfor %}
-
-    </div> -->
-
     <div class="row">
         
         <div class="mt-2 col-md-9" style="display: flex; flex-wrap: wrap;">
@@ -40,7 +17,13 @@
                             <div class="col-md-8">
                                 <div class="card-body">
                                 <h5 class="card-title">{{ usr.username }}</h5>
-                                <p class="card-text"><small class="text-muted">{{ follow_count }} followers</small></p>
+                                {% for flw in followers %}
+                                    {% if flw.status == "accepted" %}
+                                        <p class="card-text"><small class="text-muted">{{ follow_count }} followers</small></p>
+                                    {% else %}
+                                        <p class="card-text"><small class="text-muted">0 followers</small></p>
+                                    {% endif %}
+                                {% endfor %}
                                 </div>
                             </div>
                         </div>
