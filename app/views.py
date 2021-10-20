@@ -9,12 +9,14 @@ def home(request):
     try:
         user = User.objects.filter(is_staff=False)
         follow = Follow.objects.filter(given_user=request.user, status="requested")
+        # follower = Follow.objects.all()
         # follow = Follow.objects.filter(given_user=request.user, status="requested")
         follow_count = Follow.objects.filter(given_user=request.user, status="accepted").count()
 
         context = {
             'users': user,
             'followers': follow,
+            # 'followers_all': follower,
             'follow_count': follow_count,
         }
     except:
